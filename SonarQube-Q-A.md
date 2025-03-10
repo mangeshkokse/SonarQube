@@ -25,3 +25,13 @@
 - **Enterprise** – Security scanning and compliance reports.
 - **Data Center** – High availability for large enterprises.
 
+# Q. SonarQube Integration with Jenkins
+Integrating SonarQube with Jenkins allows automated code analysis in CI/CD pipelines, ensuring code quality, security, and maintainability. Below is a step-by-step guide to integrate SonarQube with Jenkins.
+
+## Prerequisites
+1. Jenkins Installed with:
+- Jenkins Plugins:
+  - SonarQube Scanner Plugin
+  - Pipeline Plugin
+
+
