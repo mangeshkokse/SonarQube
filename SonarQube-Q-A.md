@@ -38,7 +38,7 @@ Integrating SonarQube with Jenkins allows automated code analysis in CI/CD pipel
 - Admin access to SonarQube Dashboard
 - Generate a SonarQube Token
 
-3. Maven or Gradle Installed (if using Java projects Also if others select as per that like npm - nodejs)
+3. Maven or Gradle or NPM Installed ( Use Build tool as per code stack)
 
 ## Step 1: Install SonarQube Plugin in Jenkins
 1. Go to Jenkins Dashboard → `Manage Jenkins` → `Manage Plugins`.
@@ -56,6 +56,77 @@ Integrating SonarQube with Jenkins allows automated code analysis in CI/CD pipel
      - In SonarQube UI: Go to `My Account` → `Security` → Generate Token.
      - Copy the token and add it in Jenkins under **"Server Authentication Token"**.
 4. Click Save.
+
+## Step 3: Configure SonarQube Scanner
+1. Go to Jenkins Dashboard → `Manage Jenkins` → `Global Tool Configuration`.
+2. Find the SonarQube Scanner section.
+3. Click Add SonarQube Scanner.
+   - Name: `SonarScanner`
+   - Install automatically: Check the box.
+4. Click Save.
+
+## Step 4: Add SonarQube to Jenkins Pipeline
+Add the following Jenkinsfile:
+```groovy
+pipeline {
+    agent any
+    tools {
+        maven 'Maven3'  // Make sure Maven is installed in Jenkins
+    }
+    environment {
+        SONARQUBE_URL = 'http://<sonarqube-server-ip>:9000'
+        SONAR_TOKEN = credentials('sonar-token')  // Store token in Jenkins Credentials
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/example/repo.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONAR_TOKEN'
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
+    }
+}
+```
+- Run pipeline 
+
+## Additional Configurations
+1. Quality Gate Enforcement
+   To fail the pipeline if SonarQube detects issues:
+   - In SonarQube UI, go to Quality Gates.
+   - Set rules like:
+     - Fail if Code Coverage < 80%.
+     - Fail if Bugs > 0.
+
+## Webhook for SonarQube & Jenkins
+To trigger Jenkins when SonarQube analysis is complete:
+
+1. In SonarQube UI, go to `Administration` → `Webhooks`.
+2. Click Create Webhook.
+   - URL: `http://<jenkins-server>:8080/sonarqube-webhook/`
+3. Click Save.
+  
+
+
 
 
 
