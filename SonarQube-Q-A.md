@@ -33,5 +33,29 @@ Integrating SonarQube with Jenkins allows automated code analysis in CI/CD pipel
 - Jenkins Plugins:
   - SonarQube Scanner Plugin
   - Pipeline Plugin
+ 
+2. SonarQube Server is Running
+- Admin access to SonarQube Dashboard
+- Generate a SonarQube Token
+
+3. Maven or Gradle Installed (if using Java projects Also if others select as per that like npm - nodejs)
+
+## Step 1: Install SonarQube Plugin in Jenkins
+1. Go to Jenkins Dashboard → `Manage Jenkins` → `Manage Plugins`.
+2. Search for SonarQube Scanner Plugin.
+3. Click Install and restart Jenkins.
+
+## Step 2: Configure SonarQube in Jenkins
+**Add SonarQube Server Details**
+1. Go to Jenkins Dashboard → `Manage Jenkins` → `Configure System`.
+2. Find the SonarQube Servers section.
+3. Click Add SonarQube.
+   - Name: `SonarQube`
+   - Server URL: `http://<sonarqube-server-ip>:9000`
+   - Authentication Token:
+     - In SonarQube UI: Go to `My Account` → `Security` → Generate Token.
+     - Copy the token and add it in Jenkins under **"Server Authentication Token"**.
+4. Click Save.
+
 
 
