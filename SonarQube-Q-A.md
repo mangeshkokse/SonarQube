@@ -125,6 +125,80 @@ To trigger Jenkins when SonarQube analysis is complete:
    - URL: `http://<jenkins-server>:8080/sonarqube-webhook/`
 3. Click Save.
   
+# Q. SonarQube Integration with GitLab CI/CD
+Integrating SonarQube with GitLab CI/CD helps enforce code quality, detect security vulnerabilities, and ensure compliance. Below is a step-by-step production-level guide.
+
+## Prerequisites for SonarQube Integration with GitLab
+
+- **GitLab Runner Installed** – Required for running CI/CD jobs (Self-hosted or GitLab.com).  
+- **SonarQube Installed & Running** – Can be self-hosted or use SonarCloud.  
+- **SonarQube Token** – Required for authentication with SonarQube.  
+- **SonarQube GitLab Integration Enabled** – Ensures smooth interaction between SonarQube and GitLab.  
+- **SonarQube Scanner Installed** – Needed to scan the code and send reports to SonarQube.  
+- **GitLab CI/CD Pipeline Configured** – Ensure the `.gitlab-ci.yml` file is set up correctly for integration.  
+
+## Step 1: Configure SonarQube in GitLab
+***Generate SonarQube Token***
+1. Login to SonarQube UI.
+2. Navigate to User Settings → Security → Generate Token.
+3. Save the token securely.
+
+***Add SonarQube Credentials to GitLab***
+1. Go to GitLab Project → Settings → CI/CD → Variables.
+2. Add these environment variables:
+   - SONAR_HOST_URL → `http://your-sonarqube-server:9000`
+   - SONAR_TOKEN → <Generated Token>
+   - SONAR_PROJECT_KEY → <Your GitLab Repo Name>
+
+## Step 2: Configure GitLab CI/CD Pipeline
+Modify `.gitlab-ci.yml` to integrate SonarQube Analysis.
+`For a Java-Maven project:`
+```yaml
+stages:
+  - build
+  - test
+  - sonarqube
+  - deploy
+
+variables:
+  SONAR_HOST_URL: $SONAR_HOST_URL
+  SONAR_TOKEN: $SONAR_TOKEN
+  SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY
+
+before_script:
+  - echo "Starting CI Pipeline"
+
+build:
+  stage: build
+  script:
+    - mvn clean package -DskipTests
+
+sonarqube:
+  stage: sonarqube
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+  allow_failure: true
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  script:
+    - echo "Deploying to Production Environment"
+```
+## Step 3: Enforce Quality Gates
+To fail the pipeline if SonarQube detects issues:
+```yaml
+sonarqube:
+  stage: sonarqube
+  image: sonarsource/sonar-scanner-cli
+  script:
+    - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+  allow_failure: false   # Block merge requests on Quality Gate Failure
+```
+
+
 
 
 
