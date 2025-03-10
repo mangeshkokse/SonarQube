@@ -1,7 +1,7 @@
-## Q. What is SonarQube?
+# Q. What is SonarQube?
 - ***SonarQube*** is an open-source platform for continuous code quality inspection. It analyzes source code to detect bugs, vulnerabilities, code smells, and security issues, helping developers maintain high-quality and secure code.
 
-# Key Features of SonarQube
+## Key Features of SonarQube
 
  **Code Quality Analysis** – Identifies bugs, vulnerabilities, and code smells.  
  **Supports Multiple Languages** – Works with Java, Python, JavaScript, C++, Go, Kubernetes YAML, and more.  
@@ -11,7 +11,7 @@
  **Quality Gates** – Blocks builds if the code doesn’t meet quality standards.  
  **Dashboard & Reports** – Provides detailed reports on technical debt, maintainability, and test coverage.  
 
-# SonarQube Metrics
+## SonarQube Metrics
 
 - **Bugs** – Defects that could cause failures.  
 - **Code Smells** – Poor coding practices affecting maintainability.  
