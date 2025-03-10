@@ -19,3 +19,9 @@
 - **Technical Debt** – Time required to fix issues.  
 - **Code Coverage** – Measures how much of the code is covered by unit tests.  
 
+## SonarQube Editions
+- **Community (Free)** – Basic code analysis.
+- **Developer** – Advanced features like branch analysis.
+- **Enterprise** – Security scanning and compliance reports.
+- **Data Center** – High availability for large enterprises.
+
